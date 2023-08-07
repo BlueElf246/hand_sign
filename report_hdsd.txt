@@ -1,0 +1,25 @@
+Datasets: sign language wordwide. Có thể dùng cho sản xuất tiếng việt không dấu.
+size: 55k images có kích thước 50x50 từ số 0 đến 9 và từ kí tự A đến Z
+
+Files:
+extract_feature notebook: dùng media pipe để extract feature từ bàn tay. Ảnh trước khi bỏ vào mediapipe sẽ được flip trục y và chuyển từ BGR to RGB
+	Chi tiết về các thông số mediapipe trả về 21 landmark. Mỗi landmark chứa tọa độ x,y,z đã được normalized. các ảnh không detect được sẽ trả về vector 0.
+		=> tổng cộng có 63 features đưa vào model
+train_model: từ file feature extract raw. Ta thu được file csv raw. 
+	Cleaning data: drop các row có giá trị 0. Chỉ có hơn 50% dataset được mediapipe detect được(27k images)
+	Prepare ds: chia dữ liệu thành train và test, test chứa 20%.
+	Train model: dùng SVM để classify 36 classes (10 class digit + 26 class alphabet)
+		acc: 99% on train và 98% on test.
+Biểu đồ diffusion matrix: có thể thấy. Các kí tự ko detect được nhiều nhất là 0 đến 9 (trừ 4), chữ L, N, R và X. 
+
+Khi detect trên webcam: model return giá trị 6 khá nhiều. Phải điều chỉnh một chút mới detect được chính xác. 
+
+Improve: sử dụng CNN cho detection and recognnition. 
+	Nếu muốn dùng mediapipe phải tăng chất lượng hình ảnh để mediapipe có thể detect được landmark
+
+hdsd: chạy file web_cam1 để bắt đầu detect
+
+Toàn bộ code được chạy trên kaggle.
+		
+ref : https://github.com/arpita739/Real-time-Vernacular-Sign-Language-Recognition-using-MediaPipe-and-Machine-Learning/tree/master
+paper: https://github.com/arpita739/Real-time-Vernacular-Sign-Language-Recognition-using-MediaPipe-and-Machine-Learning/blob/master/IJRPR462.pdf
